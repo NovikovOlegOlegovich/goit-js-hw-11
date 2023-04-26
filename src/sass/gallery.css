@@ -1,0 +1,25 @@
+.photo-card-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.photo-card {
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.photo-card img {
+  width: 450px;
+  height: 250px;
+}
+
+.info {
+  display: flex;
+  justify-content: space-around;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}/*# sourceMappingURL=gallery.css.map */
