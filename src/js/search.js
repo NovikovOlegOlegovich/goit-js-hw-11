@@ -2,7 +2,7 @@ import { ApiPixabay } from './getImg';
 import galleryItemTemplate from '../templates/gallery.hbs';
 import Notiflix from 'notiflix';
 
-refs = {
+const refs = {
   formEl: document.getElementById('search-form'),
   galleryEl: document.querySelector('.gallery'),
   loadMoreBtnEl: document.querySelector('.load-more'),
