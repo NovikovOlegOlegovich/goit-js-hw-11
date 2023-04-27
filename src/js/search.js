@@ -20,6 +20,9 @@ function onInput(event) {
 
 async function onSubmit(event) {
   event.preventDefault();
+  if (ApiPixabayEx.serchLabel == '') {
+    return;
+  }
   if (!loadMoreBtnEl.classList.contains('hidden')) {
     removeLoadMoreBtn();
   }
