@@ -1,18 +1,16 @@
 import { ApiPixabay } from './getImg';
 import galleryItemTemplate from '../templates/gallery.hbs';
+import { refs } from '../js/refs';
 import Notiflix from 'notiflix';
+import debounce from 'lodash.debounce';
 
-const refs = {
-  formEl: document.getElementById('search-form'),
-  galleryEl: document.querySelector('.gallery'),
-  loadMoreBtnEl: document.querySelector('.load-more'),
-};
+const { formEl, galleryEl, loadMoreBtnEl } = refs;
 
 const ApiPixabayEx = new ApiPixabay();
-
-refs.formEl.addEventListener('input', onInput);
-refs.formEl.addEventListener('submit', onSubmit);
-refs.loadMoreBtnEl.addEventListener('click', loadMoreImg);
+debounce;
+formEl.addEventListener('input', onInput);
+formEl.addEventListener('submit', onSubmit);
+loadMoreBtnEl.addEventListener('click', loadMoreImg);
 
 const { searchQuery } = refs.formEl.elements;
 
@@ -20,14 +18,18 @@ function onInput(event) {
   ApiPixabayEx.serchLabel = searchQuery.value;
 }
 
-function onSubmit(event) {
+async function onSubmit(event) {
   event.preventDefault();
+  if (!loadMoreBtnEl.classList.contains('hidden')) {
+    removeLoadMoreBtn();
+  }
   refs.galleryEl.innerHTML = '';
   ApiPixabayEx.resetPage();
-  ApiPixabayEx.fetchImg().then(images => {
-    createMurkup(images);
-    checkForAvailability(images);
-  });
+  const apiPixabayRespons = await ApiPixabayEx.fetchImg();
+  createMurkup(apiPixabayRespons);
+
+  shoveLoadMoreBtn();
+  checkForAvailability(apiPixabayRespons);
 }
 
 function createMurkup(arrayOfImfg) {
@@ -39,16 +41,36 @@ function createMurkup(arrayOfImfg) {
 
 function checkForAvailability(arrayOfImfg) {
   if (!arrayOfImfg.length) {
+    removeLoadMoreBtn();
     Notiflix.Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
     );
+    return;
+  }
+  if (ApiPixabayEx.totalHits < ApiPixabayEx.page * 40) {
+    removeLoadMoreBtn();
+    Notiflix.Notify.success(
+      `We are sorry, but you haveve reached the end of search results. Total resalt is ${ApiPixabayEx.totalHits} images`
+    );
+    return;
   }
 }
 
-function loadMoreImg() {
+async function loadMoreImg() {
   ApiPixabayEx.incrementPage();
-  ApiPixabayEx.fetchImg().then(images => {
-    createMurkup(images);
-    checkForAvailability(images);
-  });
+  try {
+    const apiPixabayRespons = await ApiPixabayEx.fetchImg();
+    createMurkup(apiPixabayRespons);
+    checkForAvailability(apiPixabayRespons);
+  } catch (error) {
+    Notiflix.Notify.failure(error.message);
+  }
+}
+
+function shoveLoadMoreBtn() {
+  loadMoreBtnEl.classList.remove('hidden');
+}
+
+function removeLoadMoreBtn() {
+  loadMoreBtnEl.classList.add('hidden');
 }
