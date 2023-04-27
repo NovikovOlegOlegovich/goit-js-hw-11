@@ -6,7 +6,7 @@
 }
 
 .photo-card {
-  width: calc((100% - 120px) / 5);
+  width: calc((100% - 120px) / 4);
   border: 2px solid rgb(0, 153, 255);
   border-radius: 5px;
   margin-bottom: 20px;
