@@ -9,13 +9,17 @@ export class ApiPixabay {
     this.totalHits = 0;
   }
 
+  //https://pixabay.com/api/?key='35785441-a207f2b150a26c5e7bb8ad037'&q='dog'
+
   async fetchImg() {
     const url = `${this.url}/?key=${this.key}&q=${this.searchImg}&page=${this.page}`;
     const config = {
-      image_type: 'photo',
-      orientation: 'horizontal',
-      safesearch: true,
-      per_page: 40,
+      params: {
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
+        per_page: 40,
+      },
     };
     const { data } = await axios.get(url, config);
     this.totalHits = data.totalHits;

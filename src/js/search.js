@@ -2,12 +2,13 @@ import { ApiPixabay } from './getImg';
 import galleryItemTemplate from '../templates/gallery.hbs';
 import { refs } from '../js/refs';
 import Notiflix from 'notiflix';
-import debounce from 'lodash.debounce';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const { formEl, galleryEl, loadMoreBtnEl } = refs;
 
 const ApiPixabayEx = new ApiPixabay();
-debounce;
+
 formEl.addEventListener('input', onInput);
 formEl.addEventListener('submit', onSubmit);
 loadMoreBtnEl.addEventListener('click', loadMoreImg);
@@ -20,16 +21,30 @@ function onInput(event) {
 
 async function onSubmit(event) {
   event.preventDefault();
+
   if (ApiPixabayEx.serchLabel == '') {
+    clearMurkup();
+    removeLoadMoreBtn();
+    Notiflix.Notify.failure('search field is empty');
     return;
   }
-  if (!loadMoreBtnEl.classList.contains('hidden')) {
-    removeLoadMoreBtn();
-  }
-  refs.galleryEl.innerHTML = '';
+
+  clearMurkup();
   ApiPixabayEx.resetPage();
   const apiPixabayRespons = await ApiPixabayEx.fetchImg();
+  console.log(apiPixabayRespons);
   createMurkup(apiPixabayRespons);
+
+  const gallery = new SimpleLightbox('.photo-card a', {
+    captionPosition: 'bottom',
+    captionDelay: 250,
+  });
+
+  if (ApiPixabayEx.totalHits) {
+    Notiflix.Notify.success(
+      ` Hooray! We found ${ApiPixabayEx.totalHits} images.`
+    );
+  }
 
   shoveLoadMoreBtn();
   checkForAvailability(apiPixabayRespons);
@@ -50,7 +65,7 @@ function checkForAvailability(arrayOfImfg) {
     );
     return;
   }
-  if (ApiPixabayEx.totalHits < ApiPixabayEx.page * 40) {
+  if (Math.round(ApiPixabayEx.totalHits / 40) < ApiPixabayEx.page) {
     removeLoadMoreBtn();
     Notiflix.Notify.success(
       `We are sorry, but you haveve reached the end of search results. Total resalt is ${ApiPixabayEx.totalHits} images`
@@ -76,4 +91,8 @@ function shoveLoadMoreBtn() {
 
 function removeLoadMoreBtn() {
   loadMoreBtnEl.classList.add('hidden');
+}
+
+function clearMurkup() {
+  refs.galleryEl.innerHTML = '';
 }

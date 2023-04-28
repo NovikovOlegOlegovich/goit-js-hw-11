@@ -54,15 +54,20 @@ button {
   margin-bottom: 20px;
 }
 
+a {
+  text-decoration: none;
+}
+
 .photo-card-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .photo-card {
-  width: calc((100% - 120px) / 5);
+  width: calc((100% - 100px) / 4);
   border: 2px solid rgb(0, 153, 255);
   border-radius: 5px;
   margin-bottom: 20px;
@@ -73,7 +78,7 @@ button {
   margin-right: 20px;
 }
 
-.photo-card:nth-child(5n) {
+.photo-card:nth-child(4n) {
   margin-right: 0px;
 }
 
