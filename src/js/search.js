@@ -32,7 +32,6 @@ async function onSubmit(event) {
   clearMurkup();
   ApiPixabayEx.resetPage();
   const apiPixabayRespons = await ApiPixabayEx.fetchImg();
-  console.log(apiPixabayRespons);
   createMurkup(apiPixabayRespons);
 
   const gallery = new SimpleLightbox('.photo-card a', {
@@ -65,12 +64,11 @@ function checkForAvailability(arrayOfImfg) {
     );
     return;
   }
-  if (Math.round(ApiPixabayEx.totalHits / 40) < ApiPixabayEx.page) {
+  if (Math.ceil(ApiPixabayEx.getTotalHits / 40) <= ApiPixabayEx.getNumeOfPage) {
     removeLoadMoreBtn();
     Notiflix.Notify.success(
       `We are sorry, but you haveve reached the end of search results. Total resalt is ${ApiPixabayEx.totalHits} images`
     );
-    return;
   }
 }
 

@@ -9,8 +9,6 @@ export class ApiPixabay {
     this.totalHits = 0;
   }
 
-  //https://pixabay.com/api/?key='35785441-a207f2b150a26c5e7bb8ad037'&q='dog'
-
   async fetchImg() {
     const url = `${this.url}/?key=${this.key}&q=${this.searchImg}&page=${this.page}`;
     const config = {
@@ -40,5 +38,21 @@ export class ApiPixabay {
 
   set serchLabel(label) {
     this.searchImg = label;
+  }
+
+  get getNumeOfPage() {
+    return this.page;
+  }
+
+  set setNumOfPage(numpage) {
+    this.page = numpage;
+  }
+
+  get getTotalHits() {
+    return this.totalHits;
+  }
+
+  set setTotalHits(totalhit) {
+    this.totalHits = totalhit;
   }
 }
